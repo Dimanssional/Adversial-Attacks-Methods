@@ -1,13 +1,17 @@
+import sys
+import random
+
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+sys.path.insert(1, "Adversarial_Algorithms")
+from fgsm_method import FGSM
 import numpy as np
-import matplotlib.pyplot as plt
 
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.optimizers import SGD
-import random
+
 
 import tensorflow as tf
 
@@ -39,21 +43,8 @@ y_test_C = to_categorical(y_test_C, num_classes_C)
 labels_C = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 
 
-def adversarial_patternFGSM(image, label):
-    image = tf.cast(image, tf.float32)
-
-    with tf.GradientTape() as tape:
-        tape.watch(image)
-        prediction = loaded_model(image)
-        loss = tf.keras.losses.MSE(label, prediction)
-
-    gradient = tape.gradient(loss, image)
-    signed_grad = tf.sign(gradient)
-
-    return signed_grad
-
-
 def generate_adversarials_C(batch_size):
+    epss = [0.08, 0.1, 0.2]
     while True:
         x = []
         y = []
@@ -61,16 +52,14 @@ def generate_adversarials_C(batch_size):
          # if batch_size > 10000 and batch % 1000 == 0:
             #     print(batch/batch_size)
 
-            N = random.randint(0, 500)
+            N = random.randint(0, 600)
 
             label = y_train_C[N]
             image = X_train_C[N]
 
-            perturbations = adversarial_patternFGSM(image.reshape((1, img_rows_C, img_cols_C, channels_C)), label).numpy()
+            fgsm = FGSM(np.random.choice(epss), loaded_model)
 
-            epsilon = 0.1
-            adversarial = image + perturbations * epsilon
-
+            adversarial, _ = fgsm.adversarial_pattern(image.reshape((1, img_rows_C, img_cols_C, channels_C)), true_label=label)
             x.append(adversarial)
             y.append(y_train_C[N])
 
@@ -82,8 +71,8 @@ def generate_adversarials_C(batch_size):
 
 if __name__ == '__main__':
 
-    x_adversarial_train, y_adversarial_train = next(generate_adversarials_C(1000))
-    x_adversarial_test, y_adversarial_test = next(generate_adversarials_C(500))
+    x_adversarial_train, y_adversarial_train = next(generate_adversarials_C(25000))
+    x_adversarial_test, y_adversarial_test = next(generate_adversarials_C(17000))
 
     print(x_adversarial_train.shape, y_adversarial_train.shape, "\n")
     print(x_adversarial_test.shape, y_adversarial_test.shape)
@@ -107,7 +96,7 @@ if __name__ == '__main__':
     print("Defended %s on adversarial images: %.2f%%" % (CNN_model_adversarial_trained.metrics_names[1], eval_with_adversarial[1] * 100))
     print("Defended %s on regular images: %.2f%%" % (CNN_model_adversarial_trained.metrics_names[1], eval_regular[1] * 100))
 
-    x_adversarial_test1, y_adversarial_test1 = next(generate_adversarials_C(10000))
+    x_adversarial_test1, y_adversarial_test1 = next(generate_adversarials_C(15000))
     eval_with_adversarial = CNN_model_adversarial_trained.evaluate(x_adversarial_test1, y_adversarial_test1)
     print("Defended %s on adversarial images: %.2f%%" % (CNN_model_adversarial_trained.metrics_names[1], eval_with_adversarial[1] * 100))
 
