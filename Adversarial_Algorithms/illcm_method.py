@@ -20,18 +20,19 @@ class ILLCM(AdversarialAttack):
 
         probs = self._model(input_image)
         Y_ll = tf.argmin(probs, 1)
+        adv_img = input_image
 
         for _ in tf.range(iterations):
 
             with tf.GradientTape(watch_accessed_variables=False) as tape:
-                tape.watch(input_image)
-                probs = self._model(input_image)
+                tape.watch(adv_img)
+                probs = self._model(adv_img)
                 loss = self.losses[1](Y_ll, probs)
 
-            gradients = tape.gradient(loss, input_image)
+            gradients = tape.gradient(loss, adv_img)
             perturbations = alpha * tf.sign(gradients)
 
-            adv_img = input_image - perturbations
+            adv_img = adv_img - perturbations
 
             adv_img = tf.clip_by_value(adv_img, input_image - self.eps, input_image + self.eps)
             adv_img = tf.clip_by_value(adv_img, self.clip_min, self.clip_max)

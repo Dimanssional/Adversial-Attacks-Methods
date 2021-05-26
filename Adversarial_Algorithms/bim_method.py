@@ -22,17 +22,18 @@ class BIM(AdversarialAttack):
         true_label, iterations, alpha = kwargs.get("true_label"), kwargs.get("iterations"), kwargs.get("alpha")
 
         self.__get_logits()
+        adv_img = input_image
         for _ in tf.range(iterations):
 
             with tf.GradientTape(watch_accessed_variables=False) as tape:
-                tape.watch(input_image)
-                logits = self._model(input_image)
+                tape.watch(adv_img)
+                logits = self._model(adv_img)
                 loss = self.losses[0](true_label, tf.reshape(logits, (-1, )))
 
-            gradients = tape.gradient(loss, input_image)
+            gradients = tape.gradient(loss, adv_img)
             perturbations = alpha * tf.sign(gradients)
 
-            adv_img = input_image + perturbations
+            adv_img = adv_img + perturbations
 
             adv_img = tf.clip_by_value(adv_img, input_image - self.eps, input_image + self.eps)
             adv_img = tf.clip_by_value(adv_img, self.clip_min, self.clip_max)

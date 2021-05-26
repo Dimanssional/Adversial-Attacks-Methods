@@ -14,7 +14,6 @@ class FGSM(AdversarialAttack):
     def adversarial_pattern(self, input_image, **kwargs):
         input_image = tf.cast(input_image, tf.float32)
         true_label = kwargs.get("true_label")
-        print(true_label.shape)
 
         with tf.GradientTape(watch_accessed_variables=False) as tape:
             tape.watch(input_image)
