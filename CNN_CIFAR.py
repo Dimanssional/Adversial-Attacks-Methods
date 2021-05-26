@@ -91,10 +91,6 @@ class CNNmodel2(object):
         plt.savefig(path + "_plot.png")
         plt.close()
 
-    @staticmethod
-    def get_logits(model):
-        model.layers[-1].activation = None
-
 
 if __name__ == '__main__':
 

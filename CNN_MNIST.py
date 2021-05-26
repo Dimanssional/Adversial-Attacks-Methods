@@ -67,10 +67,6 @@ class CNNmodel(object):
         evaluation = model.evaluate(X, y)
         return evaluation
 
-    @staticmethod
-    def get_logits(model):
-        model.layers[-1].activation = None
-
 
 if __name__ == '__main__':
 
