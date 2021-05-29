@@ -12,9 +12,6 @@ import numpy as np
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.optimizers import SGD
 
-
-import tensorflow as tf
-
 jfile = open("CNN_model_cifar.json", "r")
 loaded_json = jfile.read()
 jfile.close()
@@ -59,7 +56,8 @@ def generate_adversarials_C(batch_size):
 
             fgsm = FGSM(np.random.choice(epss), loaded_model)
 
-            adversarial, _ = fgsm.adversarial_pattern(image.reshape((1, img_rows_C, img_cols_C, channels_C)), true_label=label)
+            adversarial, _ = fgsm.adversarial_pattern(image.reshape((1, img_rows_C, img_cols_C, channels_C)),
+                                                      true_label=label)
             x.append(adversarial)
             y.append(y_train_C[N])
 
