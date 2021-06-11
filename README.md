@@ -1,4 +1,4 @@
-# Adversial-Attacks Methods implementation
+# Adversial attack methods implementation
 
 <p align="justify">This project represent impact of white-box adversarial attacks on Convolutional Neural Networks. Chosen algortims are Fast-Gradient Sign Methods, Jacobian-based Saliency Map Attack, Basic Iterative Method and Iterative Least-Likely Class Method.</p>
 
