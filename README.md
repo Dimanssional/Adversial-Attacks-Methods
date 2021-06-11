@@ -11,3 +11,10 @@
 
 <p align="justify">Files CNN_adv_cifar.py and CNN_adv_mnist.py represents adversarial attacks defense system.</p>
 
+### Neural Networks
+
+* CNN_model_cifar.json and CNN_model_mnist.json are files with model structure,
+* CNN_model_cifar.h5 and CNN_model_mnist.h5 are files with network experience(learned weights),
+* CNN_model_cifar_adversarial.json and CNN_model_mnist_adversarial.json are files with protected models structure,
+* CNN_model_cifar_adversarial.h5 and CNN_model_mnist_adversarial.h5 are files with re-trained models experience.
+
