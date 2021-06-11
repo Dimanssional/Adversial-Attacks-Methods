@@ -5,6 +5,9 @@
 <p align="justify">Several models of Convolutional Neural Networks have been developed. First model have been trained on MNIST dataset. Second model have been trained on CIFAR-10 dataset. Accuracy of  first model is 98.56%. Accuracy of second model is 86.91%.</p>
 
 <p align="justify">Classes FGSM, JSMA, BIM, ILLCM implement interface AdversarialAttack and represent aforementioned adversarial algoritms.</p>
+<p align="justify">Jupyter notebook script adversarial_experiments.ipynb represent experiments with adversarial attacks.</p>
 
+<p align="center"><img src="https://user-images.githubusercontent.com/67442675/121735659-b6a58b00-caf6-11eb-9b32-3c63733f6c86.jpg">Experiment example</p>
 
+<p align="justify">Files CNN_adv_cifar.py and CNN_adv_mnist.py represents adversarial attacks defense system.</p>
 
